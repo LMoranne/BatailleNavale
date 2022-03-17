@@ -284,7 +284,6 @@ def chine_grille ():
     
     #cnv.delete("all")
 
-#peut-être essayer de stocker l'image dans un bouton ou autre
 def glisser_deposer_droit(event):
     global bat3
     bat3 = ImageTk.PhotoImage(Image.open("images/exemple.png").resize((tc*3, tc+(int)(tc/3))))
