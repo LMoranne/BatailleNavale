@@ -105,10 +105,10 @@ lignev8 = ImageTk.PhotoImage(Image.open("images/lignev8.png").resize((tc, tc)))
 #BAAAATTTTTTTTTEEEEEEAAAAAAAAAAAUUU
 bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
 bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-gauche = False 
-droit = False
 positionsX = []
 positionsY = []
+horizontale = True
+
 
 #def chine_menu ():
 
@@ -235,7 +235,7 @@ def chine_jeu ():
                     cnv.create_image(j*tc, i*tc, anchor=NW, image=car)
 
 def chine_grille ():
-    global select, position3X, position3Y, position2X, position2Y, gauche, droit, type_bateau
+    global select, position3X, position3Y, position2X, position2Y, type_bateau, nbat2, horizontale
     select = cnv.create_image(1920, 1080, anchor=NW, image=selectj)
     position3X_origin = 1250
     position3Y_origin = 500
@@ -286,79 +286,103 @@ def chine_grille ():
                      cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=ligner)"""
                  if (grille[i][j]==3):
                      cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=croix_noir)
+    if (nbat2%2 == 0):
+        type_bateau = 2
+    else:
+        type_bateau = 3
     if (tour == 2):
         for i in range(len(positionsX)):
             cnv.create_image(positionsX[i], positionsY[i], anchor=NW, image=cercle)
-        if (bateau != 0):
-            type_bateau = random.randint(2, 3)
+            print(positionsX[i], positionsY[i])
+        if (nbat2 != 0):
             if (type_bateau == 2):
                 bato2 = cnv.create_image(position2X_origin, position2Y_origin, anchor=NW, image=bat2)
-                if (droit):
+                if (horizontale == True):
                     positionsX.append(position2X-90)
                     positionsY.append(position2Y-45)
                     positionsX.append(position2X)
                     positionsY.append(position2Y-45)
-                elif (gauche):
+                elif (horizontale == False):
                     positionsX.append(position2X-45)
                     positionsY.append(position2Y-90)
                     positionsX.append(position2X-45)
                     positionsY.append(position2Y)
             elif (type_bateau == 3):
                 bato3 = cnv.create_image(position3X_origin, position3Y_origin, anchor=NW, image=bat3)
-                if (droit):
+                if (horizontale == True):
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X+45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X-135)
                     positionsY.append(position3Y-45)
-                elif (gauche):
+                elif (horizontale == False):
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y+45)
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y-135)
-
     #cnv.delete("all")
-
-def glisser_deposer_droit(event):
-    global bat2, bat3, position3X, position3Y, position2X, position2Y, type_bateau, gauche, droit
-    droit = True
-    gauche = False
-    if (type_bateau == 2):
-        bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-        bato2 = cnv.create_image(event.x, event.y, image=bat2)
-        position2X = event.x
-        position2Y = event.y
-    elif (type_bateau == 3):
-        bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
-        bato3 = cnv.create_image(event.x, event.y, image=bat3)
-        position3X = event.x
-        position3Y = event.y
-        
     
 def glisser_deposer_gauche(event):
-    global bat2, bat3, gauche, droit, position2X, position2Y, position3X, position3Y, type_bateau
-    droit = False
-    gauche = True
-    if (type_bateau == 2):
-        bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
-        bato2 = cnv.create_image(event.x, event.y, image=bat2)
-        position2X = event.x
-        position2Y = event.y
-    elif (type_bateau == 3):
-        bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
-        bato3 = cnv.create_image(event.x, event.y, image=bat3)
-        position3X = event.x
-        position3Y = event.y
+    global bat2, bat3, gauche, droit, position2X, position2Y, position3X, position3Y, type_bateau, horizontale
+    if (tour == 2):
+        if (type_bateau == 2):
+            if (horizontale):
+                bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
+                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+                position2X = event.x
+                position2Y = event.y
+            else:
+                bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
+                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+                position2X = event.x
+                position2Y = event.y
+        elif (type_bateau == 3):
+            if horizontale:
+                bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
+                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+                position3X = event.x
+                position3Y = event.y
+            else:
+                bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
+                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+                position3X = event.x
+                position3Y = event.y
 
+        
+        
+def rotation(event):
+    global horizontale, position2X, position2Y, position3X, position3Y, bat2, bat3, type_bateau
+    if (tour == 2):
+        if (horizontale == True):
+            horizontale = False
+        else:
+            horizontale = True
+        if (type_bateau == 2):
+            if horizontale:
+                bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
+                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+            else:
+                bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
+                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+        elif (type_bateau == 3):
+            if horizontale:
+                bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
+                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+            else:
+                bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
+                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+            
+
+                 
 chine_jeu()
 chine_grille()
 root.bind('<Motion>', origine) #détecte le mouvement de la souris
 root.bind("<Button 1>",origine_clic) #détecte le clic gauche
 root.bind("<KeyPress>", presse)
-root.bind("<B3-Motion>", glisser_deposer_droit) #motion droit
+root.bind("<Button 3>",rotation)
 root.bind("<B1-Motion>", glisser_deposer_gauche) #motion gauche
 cnv.pack()
 root.mainloop()
