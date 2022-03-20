@@ -108,6 +108,7 @@ bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
 positionsX = []
 positionsY = []
 horizontale = True
+position_valide = False
 
 
 #def chine_menu ():
@@ -130,11 +131,11 @@ def origine_clic(eventorigin):
           if (x>grillex and x<(grillex+cote*tc) and y>grilley and y<(grilley+cote*tc)):
               placer_croix((int)((x-grillex)/tc),(int)((y-grilley)/tc))
 
-def presse(event):
-    global tour, type_bateau
+def valider(event):
+    global tour, type_bateau, position_valide
     kp = repr(event.char)
     #print ("pressed", kp) #repr(event.char))
-    if (kp == "'p'" and tour == 2):
+    if (kp == "'p'" and tour == 2 and position_valide == True):
         #print ("pressed x", repr(event.char))
         cnv.delete("all")
         tour = 1
@@ -201,12 +202,12 @@ def placer_croix(cx,cy):
 def victoire():
     global tour
     tour = 3
-    cnv.create_text(960, 540, text="Bouillave l'ennemi, tu as!", fill="#FFC300", font=('Distrait 100 bold'))
+    cnv.create_text(960, 540, text="Bravo!", fill="#FFC300", font=('Distrait 100 bold'))
     
 def defaite():
     global tour
     tour = 3
-    cnv.create_text(960, 540, text="petite crotte", fill="#00A513", font=('Distrait 200 bold'))
+    cnv.create_text(960, 540, text="C'est perdu", fill="#00A513", font=('Distrait 200 bold'))
 
 def chine_jeu ():
     #Dessin de la feuille A4 en fond
@@ -235,7 +236,7 @@ def chine_jeu ():
                     cnv.create_image(j*tc, i*tc, anchor=NW, image=car)
 
 def chine_grille ():
-    global select, position3X, position3Y, position2X, position2Y, type_bateau, nbat2, horizontale
+    global select, position3X, position3Y, position2X, position2Y, type_bateau, nbat2, horizontale, position_valide
     select = cnv.create_image(1920, 1080, anchor=NW, image=selectj)
     position3X_origin = 1250
     position3Y_origin = 500
@@ -297,26 +298,26 @@ def chine_grille ():
         if (nbat2 != 0):
             if (type_bateau == 2):
                 bato2 = cnv.create_image(position2X_origin, position2Y_origin, anchor=NW, image=bat2)
-                if (horizontale == True):
+                if (horizontale == True and position_valide == True):
                     positionsX.append(position2X-90)
                     positionsY.append(position2Y-45)
                     positionsX.append(position2X)
                     positionsY.append(position2Y-45)
-                elif (horizontale == False):
+                elif (horizontale == False and position_valide == True):
                     positionsX.append(position2X-45)
                     positionsY.append(position2Y-90)
                     positionsX.append(position2X-45)
                     positionsY.append(position2Y)
             elif (type_bateau == 3):
                 bato3 = cnv.create_image(position3X_origin, position3Y_origin, anchor=NW, image=bat3)
-                if (horizontale == True):
+                if (horizontale == True and position_valide == True):
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X+45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X-135)
                     positionsY.append(position3Y-45)
-                elif (horizontale == False):
+                elif (horizontale == False and position_valide == True):
                     positionsX.append(position3X-45)
                     positionsY.append(position3Y-45)
                     positionsX.append(position3X-45)
@@ -326,31 +327,47 @@ def chine_grille ():
     #cnv.delete("all")
     
 def glisser_deposer_gauche(event):
-    global bat2, bat3, gauche, droit, position2X, position2Y, position3X, position3Y, type_bateau, horizontale
+    global bat2, bat3, gauche, droit, position2X, position2Y, position3X, position3Y, type_bateau, horizontale, position_valide
     if (tour == 2):
+        print(event.x, event.y)
         if (type_bateau == 2):
             if (horizontale):
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-                bato2 = cnv.create_image(event.x, event.y, image=bat2)
-                position2X = event.x
-                position2Y = event.y
+                bato2 = cnv.create_image(event.x, event.y, image=bat2) 
+                if event.x <= 1125 and event.x >=350 and event.y>=220 :
+                    position2X = event.x
+                    position2Y = event.y
+                    position_valide = True
+                else:
+                    position_valide = False
             else:
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
                 bato2 = cnv.create_image(event.x, event.y, image=bat2)
-                position2X = event.x
-                position2Y = event.y
+                if event.x <= 1125 and event.x >=350 and event.y>=220 :
+                    position2X = event.x
+                    position2Y = event.y
+                    position_valide = True
+                else:
+                    position_valide = False
         elif (type_bateau == 3):
             if horizontale:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
                 bato3 = cnv.create_image(event.x, event.y, image=bat3)
-                position3X = event.x
-                position3Y = event.y
+                if event.x <= 1125 and event.x >=350 and event.y>=220 :
+                    position3X = event.x
+                    position3Y = event.y
+                    position_valide = True
+                else:
+                    position_valide = False
             else:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
                 bato3 = cnv.create_image(event.x, event.y, image=bat3)
-                position3X = event.x
-                position3Y = event.y
-
+                if event.x <= 1125 and event.x >=350 and event.y>=220 :
+                    position3X = event.x
+                    position3Y = event.y
+                    position_valide = True
+                else:
+                    position_valide = False
         
         
 def rotation(event):
@@ -380,8 +397,8 @@ def rotation(event):
 chine_jeu()
 chine_grille()
 root.bind('<Motion>', origine) #détecte le mouvement de la souris
-root.bind("<Button 1>",origine_clic) #détecte le clic gauche
-root.bind("<KeyPress>", presse)
+root.bind("<Button 1>",origine_clic) #détecte lppe clic gauche
+root.bind("<KeyPress>", valider)
 root.bind("<Button 3>",rotation)
 root.bind("<B1-Motion>", glisser_deposer_gauche) #motion gauche
 cnv.pack()
