@@ -18,7 +18,7 @@ root=Tk()
 #taille de la fenêtre
 l = 1920
 h = 1080
-cote = 9 #taille côté de la grille
+cote = 7 #taille côté de la grille
 tc = (int)(1080/(cote+3)) #taille des carreaux
 centre = (int)(((int)(1920/tc))/2) #milieu de la largeur de la fenêtre (en cases)
 marge = centre+(int)(cote/2)+1 #calcule la case de la marge
@@ -38,7 +38,7 @@ print(nbat)
 nbat1 = nbat #nombre de bateaux du joueur 1
 nbat2 = nbat #nombre de bateaux du joueur 2
 
-for i in range(len(bateau)):
+"""for i in range(len(bateau)):
     for j in range(bateau[i]):
         boule = False
         while(boule==False):
@@ -47,7 +47,7 @@ for i in range(len(bateau)):
             if (grille[rx][ry]==0):
                 grille[rx][ry]=1
                 boule=True
-
+"""
 for i in range(len(bateau2)):
     
     for j in range(bateau2[i]):
@@ -105,8 +105,6 @@ lignev8 = ImageTk.PhotoImage(Image.open("images/lignev8.png").resize((tc, tc)))
 #BAAAATTTTTTTTTEEEEEEAAAAAAAAAAAUUU
 bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
 bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-positionsX = []
-positionsY = []
 horizontale = True
 position_valide = False
 
@@ -131,11 +129,11 @@ def origine_clic(eventorigin):
           if (x>grillex and x<(grillex+cote*tc) and y>grilley and y<(grilley+cote*tc)):
               placer_croix((int)((x-grillex)/tc),(int)((y-grilley)/tc))
 
-def valider(event):
+def presse(event):
     global tour, type_bateau, position_valide
     kp = repr(event.char)
     #print ("pressed", kp) #repr(event.char))
-    if (kp == "'p'" and tour == 2 and position_valide == True):
+    if (kp == "'p'" and tour == 2):
         #print ("pressed x", repr(event.char))
         cnv.delete("all")
         tour = 1
@@ -143,11 +141,11 @@ def valider(event):
         chine_grille()
 
 def placer_cercle(cx,cy):
-    global grille
+    global grille, horizontale, type_bateau, position_valide
     if (grille[cx][cy]==0):
         #print(grille[cx][cy],cx,cy)
-        cnv.create_image(cx, cy, anchor=NW, image=cercle)
-        grille[cx][cy]=2
+        #cnv.create_image(cx*tc, cy*tc, anchor=NW, image=cercle)
+       grille[cx][cy] = 1
     
 def placer_croix(cx,cy):
      global grille, grille2, tour, nbat1, nbat2
@@ -236,12 +234,13 @@ def chine_jeu ():
                     cnv.create_image(j*tc, i*tc, anchor=NW, image=car)
 
 def chine_grille ():
-    global select, position3X, position3Y, position2X, position2Y, type_bateau, nbat2, horizontale, position_valide
+    global select, positionX, positionY, type_bateau, nbat2, horizontale, position_valide
     select = cnv.create_image(1920, 1080, anchor=NW, image=selectj)
     position3X_origin = 1250
     position3Y_origin = 500
     position2X_origin = 1250
     position2Y_origin = 250
+    position_valide = False
     #Dessin de la grille
     for i in range (cote+2): #y
         for j in range (cote+2): #x
@@ -280,98 +279,66 @@ def chine_grille ():
                      if (grille2[i][j]==3):
                          cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=croix_rouge)
              if (tour == 2):
-                 """if (grille[i][j]==1):
+                 if (grille[i][j]==1):
                      cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=cercle)
                  if (grille[i][j]==2):
                      cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=cercle_rouge)
-                     cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=ligner)"""
+                     cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=ligner)
                  if (grille[i][j]==3):
                      cnv.create_image(placementx, (j+2)*tc, anchor=NW, image=croix_noir)
-    if (nbat2%2 == 0):
-        type_bateau = 2
-    else:
-        type_bateau = 3
+    type_bateau = random.randint(2, 3)
     if (tour == 2):
-        for i in range(len(positionsX)):
-            cnv.create_image(positionsX[i], positionsY[i], anchor=NW, image=cercle)
-            print(positionsX[i], positionsY[i])
         if (nbat2 != 0):
             if (type_bateau == 2):
                 bato2 = cnv.create_image(position2X_origin, position2Y_origin, anchor=NW, image=bat2)
-                if (horizontale == True and position_valide == True):
-                    positionsX.append(position2X-90)
-                    positionsY.append(position2Y-45)
-                    positionsX.append(position2X)
-                    positionsY.append(position2Y-45)
-                elif (horizontale == False and position_valide == True):
-                    positionsX.append(position2X-45)
-                    positionsY.append(position2Y-90)
-                    positionsX.append(position2X-45)
-                    positionsY.append(position2Y)
+                
             elif (type_bateau == 3):
                 bato3 = cnv.create_image(position3X_origin, position3Y_origin, anchor=NW, image=bat3)
-                if (horizontale == True and position_valide == True):
-                    positionsX.append(position3X-45)
-                    positionsY.append(position3Y-45)
-                    positionsX.append(position3X+45)
-                    positionsY.append(position3Y-45)
-                    positionsX.append(position3X-135)
-                    positionsY.append(position3Y-45)
-                elif (horizontale == False and position_valide == True):
-                    positionsX.append(position3X-45)
-                    positionsY.append(position3Y-45)
-                    positionsX.append(position3X-45)
-                    positionsY.append(position3Y+45)
-                    positionsX.append(position3X-45)
-                    positionsY.append(position3Y-135)
+                
     #cnv.delete("all")
     
 def glisser_deposer_gauche(event):
-    global bat2, bat3, gauche, droit, position2X, position2Y, position3X, position3Y, type_bateau, horizontale, position_valide
+    global bat2, bat3, positionX, positionY, type_bateau, horizontale, position_valide
     if (tour == 2):
-        print(event.x, event.y)
+        #print(event.x, event.y)
         if (type_bateau == 2):
             if (horizontale):
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-                bato2 = cnv.create_image(event.x, event.y, image=bat2) 
-                if event.x <= 1125 and event.x >=350 and event.y>=220 :
-                    position2X = event.x
-                    position2Y = event.y
-                    position_valide = True
-                else:
-                    position_valide = False
+                position(event, bat2)
             else:
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
-                bato2 = cnv.create_image(event.x, event.y, image=bat2)
-                if event.x <= 1125 and event.x >=350 and event.y>=220 :
-                    position2X = event.x
-                    position2Y = event.y
-                    position_valide = True
-                else:
-                    position_valide = False
+                position(event, bat2)
         elif (type_bateau == 3):
             if horizontale:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
-                bato3 = cnv.create_image(event.x, event.y, image=bat3)
-                if event.x <= 1125 and event.x >=350 and event.y>=220 :
-                    position3X = event.x
-                    position3Y = event.y
-                    position_valide = True
-                else:
-                    position_valide = False
+                position(event, bat3)
             else:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
-                bato3 = cnv.create_image(event.x, event.y, image=bat3)
-                if event.x <= 1125 and event.x >=350 and event.y>=220 :
-                    position3X = event.x
-                    position3Y = event.y
-                    position_valide = True
-                else:
-                    position_valide = False
-        
+                position(event, bat3)
+
+def position(event, image):
+    global position_valide, bato, positionX, positionY, horizontale, type_bateau
+    if (horizontale == True and (event.x <= grillex+tc*cote-(tc*(type_bateau-1)) and event.x >=grillex and event.y>=grilley and event.y<=grilley+tc*cote-(tc*(type_bateau-1)))) or (horizontale == False and (event.x <= grillex+tc*cote and event.x >=grillex and event.y>=grilley and event.y<=grilley+tc*cote)):
+        positionX = event.x
+        positionY = event.y
+        if (horizontale == True and (event.x <= grillex+tc*cote-(tc*(type_bateau-1))  and event.x >=grillex and event.y>=grilley and event.y<=grilley+tc*cote-(tc*(type_bateau-1)) )) or (horizontale == False and (event.x <= grillex+tc*cote and event.x >=grillex and event.y>=grilley and event.y<=grilley+tc*cote)):
+            if horizontale:
+                positionX = grillex+((int)((event.x-grillex)/tc))*tc
+                positionY = grilley+((int)((event.y-grilley)/tc))*tc
+            else:
+                positionX = grillex+((int)((event.x-grillex)/tc))*tc
+                positionY = grilley+((int)((event.y-grilley)/tc))*tc
+
+        else:
+            positionX = event.x
+            positionY = event.y
+        position_valide = True
+    else:
+        position_valide = False
+    bato = cnv.create_image(positionX, positionY, image=image,anchor=NW)
         
 def rotation(event):
-    global horizontale, position2X, position2Y, position3X, position3Y, bat2, bat3, type_bateau
+    global horizontale, positionX, positionY, bat2, bat3, type_bateau, position_valide
     if (tour == 2):
         if (horizontale == True):
             horizontale = False
@@ -380,26 +347,48 @@ def rotation(event):
         if (type_bateau == 2):
             if horizontale:
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2.png").resize((tc*2, tc)))
-                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+                bato2 = cnv.create_image(grillex+((int)((event.x-grillex)/tc))*tc, grilley+((int)((event.y-grilley)/tc))*tc, image=bat2, anchor=NW)
             else:
                 bat2 = ImageTk.PhotoImage(Image.open("images/bat2b.png").resize((tc, tc*2)))
-                bato2 = cnv.create_image(event.x, event.y, image=bat2)
+                bato2 = cnv.create_image(grillex+((int)((event.x-grillex)/tc))*tc, grilley+((int)((event.y-grilley)/tc))*tc, image=bat2, anchor=NW)
         elif (type_bateau == 3):
             if horizontale:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3.png").resize((tc*3, tc)))
-                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+                bato3 = cnv.create_image(grillex+((int)((event.x-grillex)/tc))*tc, grilley+((int)((event.y-grilley)/tc))*tc, image=bat3, anchor=NW)
             else:
                 bat3 = ImageTk.PhotoImage(Image.open("images/bat3b.png").resize((tc, tc*3)))
-                bato3 = cnv.create_image(event.x, event.y, image=bat3)
+                bato3 = cnv.create_image(grillex+((int)((event.x-grillex)/tc))*tc, grilley+((int)((event.y-grilley)/tc))*tc, image=bat3, anchor=NW)
             
+def valide(event):
+    global tour, position_valide, positionX, positionY, type_bateau, horizontale
+    if (tour == 2 and position_valide == True):
+        if (type_bateau == 2 and horizontale):
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-2)
+            placer_cercle(int(positionX/tc)-2, int(positionY/tc)-2)
+        elif (type_bateau == 2 and horizontale != True):
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-2)
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-1)
+        elif(type_bateau == 3 and horizontale):
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-2)
+            placer_cercle(int(positionX/tc)-2, int(positionY/tc)-2)
+            placer_cercle(int(positionX/tc)-1, int(positionY/tc)-2)
+        elif (type_bateau == 3 and horizontale != True):
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-2)
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc)-1)
+            placer_cercle(int(positionX/tc)-3, int(positionY/tc))
 
+        tour = 1
+        chine_jeu()
+        chine_grille()
+        #récupérer la position des cercles
                  
 chine_jeu()
 chine_grille()
 root.bind('<Motion>', origine) #détecte le mouvement de la souris
 root.bind("<Button 1>",origine_clic) #détecte lppe clic gauche
-root.bind("<KeyPress>", valider)
+root.bind("<KeyPress>", presse)
 root.bind("<Button 3>",rotation)
 root.bind("<B1-Motion>", glisser_deposer_gauche) #motion gauche
+root.bind("<ButtonRelease-1>", valide)
 cnv.pack()
 root.mainloop()
