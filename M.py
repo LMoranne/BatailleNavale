@@ -25,21 +25,18 @@ mode_affichage = 0 #0:ordi 1: téléphone
 #Fenêtre
 largeur = 1920 #largeur de la fenêtre
 hauteur = 1080 #hauteur de la fenêtre
-#if (largeur/hauteur<1.5):
-#    largeur=hauteur*1.5
-#if (largeur/hauteur>4):
-#    hauteur=largeur*0.5
+#Canevas
 cnv = Canvas(root, width=largeur, height=hauteur, bg='ivory')
-pdr = "cours" #pack de ressource
-
-instant = "menu" #pour dire au programme à quel moment du jeu il en est c'est pour les bind en bas
-
+#pack de ressource
+pdr = "cours"
+#croix/carrés/cercles posés par chaque joueur
 croicle = [] #croix/carrés du joueur 1
 croicle2 = [] #croix/carrés du joueur 2
 
 #Paramètres de la grille et de la feuille
 cote = 10 #taille côté de la grille, 10 c'est la taille réglementaire
-tour = 0
+#Tour
+tour = 0 #0: début, 1: joueur 1, 2: joueur 2, 3: fin
 
 #Création des images nécessaires pour le menu
 sfeuille = ImageTk.PhotoImage(Image.open(pdr+"/feuille.png"))
@@ -47,41 +44,36 @@ sentoure = ImageTk.PhotoImage(Image.open(pdr+"/entoure.png"))
 spas_entoure = ImageTk.PhotoImage(Image.open(pdr+"/pas_entoure.png"))
 
 global grillex, grilley, taille_marge, marge, milieu, tc, car, car2, car3, car4, car5, car6, car7, car8, car9, case, case2, case3, case4, case5, case6, case7, case8, case9, croix_rouge, croix_noir, cercle, cercle_rouge, carre, selectj, selectr, ligner, ligner2, ligner3, ligner4, ligner5, ligner6, ligner7, ligner8, lignev, lignev2, lignev3, lignev4, lignev5, lignev6, lignev7, lignev8, bat5, bat4, bat3, bat2, horizontale, position_valide, porte_avion, croiseur, contre_torpilleur, torpilleur
-if (mode_affichage == 0):
-    tc = (int)(hauteur/(cote+3)) #taille des carreaux
-    taille_marge = hauteur/2 #largeur de la marge
-    marge = (int)((largeur-(taille_marge))/tc)*tc #coordonnée x ou y de la marge selon l'orientation de la grille
-    if ((int)(marge/tc)%2==1 and cote%2==0):
-        marge = marge -tc
-    if ((int)(marge/tc)%2==0 and cote%2==1):
-        marge = marge -tc
-    milieu = marge/2 #milieu de la largeur de la feuille EN NE COMPTANT PAS LA MARGE
-else:
-    tc = (int)(largeur/(cote+3)) #taille des carreaux
-    taille_marge = (hauteur/5)*2 #hauteur de la marge
-    marge = (int)((hauteur-(taille_marge))/tc)*tc #coordonnée x ou y de la marge selon l'orientation de la grille
-    milieu = largeur/2
+tc = (int)(hauteur/(cote+3)) #taille des carreaux
+taille_marge = hauteur/2 #largeur de la marge
+marge = (int)((largeur-(taille_marge))/tc)*tc #coordonnée x ou y de la marge selon l'orientation de la grille
+if ((int)(marge/tc)%2==1 and cote%2==0):
+    marge = marge -tc
+if ((int)(marge/tc)%2==0 and cote%2==1):
+    marge = marge -tc
+milieu = marge/2 #milieu de la largeur de la feuille EN NE COMPTANT PAS LA MARGE
 
 grillex = milieu-((cote/2)*tc) #x du haut gauche de la grille
 grilley = tc #y du haut gauche de la grille
 #print(grillex, grilley)
+#coordonnées de la case cliquée par l'adversaire
+rx = 0
+ry = 0
+#coordonnées de la souris de l'adversaire
+posourisx2 = 0
+posourisy2 = 0
 
 #Création des images
 #pour les carreaux
-#change l'oriantation des images en fonction du mode d'affichage pour tourner la feuille
-if (mode_affichage == 0):
-    rotation = 0
-else:
-    rotation = 90
-car = ImageTk.PhotoImage(Image.open(pdr+"/carreau.png").resize((tc, tc)).rotate(rotation))
-car2 = ImageTk.PhotoImage(Image.open(pdr+"/carreau2.png").resize((tc, tc)).rotate(rotation))
-car3 = ImageTk.PhotoImage(Image.open(pdr+"/carreau3.png").resize((tc, tc)).rotate(rotation))
-car4 = ImageTk.PhotoImage(Image.open(pdr+"/carreau4.png").resize((tc, tc)).rotate(rotation))
-car5 = ImageTk.PhotoImage(Image.open(pdr+"/carreau5.png").resize((tc, tc)).rotate(rotation))
-car6 = ImageTk.PhotoImage(Image.open(pdr+"/carreau6.png").resize((tc, tc)).rotate(rotation))
-car7 = ImageTk.PhotoImage(Image.open(pdr+"/carreau7.png").resize((tc, tc)).rotate(rotation))
-car8 = ImageTk.PhotoImage(Image.open(pdr+"/carreau8.png").resize((tc, tc)).rotate(rotation))
-car9 = ImageTk.PhotoImage(Image.open(pdr+"/carreau9.png").resize((tc, tc)).rotate(rotation))
+car = ImageTk.PhotoImage(Image.open(pdr+"/carreau.png").resize((tc, tc)))
+car2 = ImageTk.PhotoImage(Image.open(pdr+"/carreau2.png").resize((tc, tc)))
+car3 = ImageTk.PhotoImage(Image.open(pdr+"/carreau3.png").resize((tc, tc)))
+car4 = ImageTk.PhotoImage(Image.open(pdr+"/carreau4.png").resize((tc, tc)))
+car5 = ImageTk.PhotoImage(Image.open(pdr+"/carreau5.png").resize((tc, tc)))
+car6 = ImageTk.PhotoImage(Image.open(pdr+"/carreau6.png").resize((tc, tc)))
+car7 = ImageTk.PhotoImage(Image.open(pdr+"/carreau7.png").resize((tc, tc)))
+car8 = ImageTk.PhotoImage(Image.open(pdr+"/carreau8.png").resize((tc, tc)))
+car9 = ImageTk.PhotoImage(Image.open(pdr+"/carreau9.png").resize((tc, tc)))
 #pour les cases
 case = ImageTk.PhotoImage(Image.open(pdr+"/case.png").resize((tc, tc)))
 case2 = ImageTk.PhotoImage(Image.open(pdr+"/case2.png").resize((tc, tc)))
@@ -132,7 +124,12 @@ bat4big = ImageTk.PhotoImage(Image.open(pdr+"/bat4b.png").resize((tc*2, tc*7)))
 bat5big = ImageTk.PhotoImage(Image.open(pdr+"/bat5b.png").resize((tc*2, tc*8)))
 horizontale = False
 position_valide = False
-
+#Humain
+humain_content = ImageTk.PhotoImage(Image.open(pdr+"/humain_content.png").resize((200, 200)))
+humain_triste = ImageTk.PhotoImage(Image.open(pdr+"/humain_triste.png").resize((200, 200)))
+#Machine
+machine_content = ImageTk.PhotoImage(Image.open(pdr+"/machine_content.png").resize((200, 200)))
+machine_triste = ImageTk.PhotoImage(Image.open(pdr+"/machine_triste.png").resize((200, 200)))
 #d'accord
 positionX_origin = 1500
 positionY_origin = 250
@@ -145,26 +142,3 @@ bato3 = []
 bato4 = []
 bato5 = []
 batos = [bato2, bato3, bato4, bato5]
-
-"""def finPartie(VictoireOuDefaite):
-    global tour
-    tour=3
-    if VictoireOuDefaite:
-        texte="Bouillave l'ennemi, tu as!"
-        remplissage="#FFC300"
-    else:
-        texte= "petite crotte"
-        remplissage= "#00A513"
-    cnv.create_text(960, 540, text=texte, fill=remplissage, font=('Distrait 100 bold'))"""
-
-
-def victoire():
-    global tour
-    tour = 3
-    cnv.create_text(960, 540, text="Bouillave l'ennemi, tu as!", fill="#FFC300", font=('Distrait 100 bold'))
-    
-def defaite():
-    global tour
-    tour = 3
-    cnv.create_text(960, 540, text="petite crotte", fill="#00A513", font=('Distrait 200 bold'))
-    
