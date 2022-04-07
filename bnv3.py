@@ -18,7 +18,7 @@ root=Tk()
 #taille de la fenêtre
 l = 1920
 h = 1080
-cote = 7 #taille côté de la grille
+cote = 10 #taille côté de la grille
 tc = (int)(1080/(cote+3)) #taille des carreaux
 centre = (int)(((int)(1920/tc))/2) #milieu de la largeur de la fenêtre (en cases)
 marge = centre+(int)(cote/2)+1 #calcule la case de la marge
@@ -424,8 +424,8 @@ def valide(event):
             placer_cercle(int(positionX/tc)-3, int(positionY/tc))
             placer_cercle(int(positionX/tc)-3, int(positionY/tc)+1)
         elif(type_bateau == 5 and horizontale):
+            placer_cercle(int(positionX/tc)+1, int(positionY/tc)-2)
             placer_cercle(int(positionX/tc), int(positionY/tc)-2)
-            placer_cercle(int(positionX/tc)-4, int(positionY/tc)-2)
             placer_cercle(int(positionX/tc)-3, int(positionY/tc)-2)
             placer_cercle(int(positionX/tc)-2, int(positionY/tc)-2)
             placer_cercle(int(positionX/tc)-1, int(positionY/tc)-2)
@@ -441,13 +441,15 @@ def valide(event):
         chine_grille()
         #récupérer la position des cercles
 def bateau_placer():
-    global type_bateau, torpilleur, contre_torpilleur, croiseur, porte_avion, types_bateaux
+    global type_bateau, torpilleur, contre_torpilleur, croiseur, porte_avion, types_bateaux, reste_bateau
     types_bateaux_restants = []
     for i in range(len(types_bateaux)):
         if (types_bateaux[i] > 0):
             types_bateaux_restants.append(i+2)
-    type_bateau = random.randint(min(types_bateaux_restants), max(types_bateaux_restants))
-    print(type_bateau)
+    if (len(types_bateaux_restants) != 0):
+        type_bateau = random.randint(min(types_bateaux_restants), max(types_bateaux_restants))
+    else :
+        type_bateau = 0
     #types_bateaux[type_bateau-2] = types_bateaux[type_bateau-2] -1
     #print(types_bateaux_restants)
 chine_jeu()
